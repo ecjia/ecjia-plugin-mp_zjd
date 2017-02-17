@@ -64,7 +64,7 @@ class mp_zjd_user implements platform_interface {
     		$id = trim($_GET['id']);
     		$rs = $wechat_prize_db->where(array('openid' => $openid,'id' => $id))->get_field('winner');
     		if (!empty($rs)) {
-    			return ecjia_front::$controller->showmessage('已经领取', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    			ecjia_front::$controller->showmessage('已经领取', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
     		ecjia_front::$controller->assign('id',$id);
     		ecjia_front::$controller->assign_lang();
@@ -75,20 +75,20 @@ class mp_zjd_user implements platform_interface {
     		$id = trim($_POST['id']);
     		$data = $_POST['data'];
     		if (empty($id)) {
-    			return ecjia_front::$controller->showmessage('请选择中奖的奖品', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    			ecjia_front::$controller->showmessage('请选择中奖的奖品', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
     		if (empty($data['name'])) {
-    			return ecjia_front::$controller->showmessage('请填写姓名', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    			ecjia_front::$controller->showmessage('请填写姓名', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
     		if (empty($data['phone'])) {
-    			return ecjia_front::$controller->showmessage('请填写手机号', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    			ecjia_front::$controller->showmessage('请填写手机号', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
     		if (empty($data['address'])) {
-    			return ecjia_front::$controller->showmessage('请填写详细地址', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    			ecjia_front::$controller->showmessage('请填写详细地址', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
     		$winner['winner'] = serialize($data);
     		$wechat_prize_db->where(array('id' => $id))->update($winner);
-    		return ecjia_front::$controller->showmessage('资料提交成功，请等待发放奖品,可以继续砸金蛋哦', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid))));
+    		ecjia_front::$controller->showmessage('资料提交成功，请等待发放奖品,可以继续砸金蛋哦', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid))));
     	}       
 	}
 }
