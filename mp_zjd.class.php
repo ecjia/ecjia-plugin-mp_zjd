@@ -88,7 +88,6 @@ class mp_zjd extends platform_abstract
     	$unionid = $wechat_user->getUnionid();
     	$connect_user = new \Ecjia\App\Connect\ConnectUser('sns_wechat', $unionid, 'user');
     	$getUserId = $connect_user->getUserId();
-    	$nobd  = "还未绑定，需<a href = '".RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid))."'>点击此处</a>进行绑定";
     	
     	if (!$connect_user->checkUser()) {
     		//合并ect_uid旧的数据处理
@@ -105,13 +104,21 @@ class mp_zjd extends platform_abstract
 					$connect_db->insert($data);
 				}
 			}
-			$content = array(
-				'ToUserName' => $this->from_username,
-				'FromUserName' => $this->to_username,
-				'CreateTime' => SYS_TIME,
-				'MsgType' => 'text',
-				'Content' => $nobd
-			);
+			//组合类似模板信息
+    		$articles = array();
+    		$articles[0]['Title'] = '未绑定';
+    		$articles[0]['PicUrl'] = '';
+    		$articles[0]['Description'] = '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作';
+    		$articles[0]['Url'] = RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid));
+    		$count = count($articles);
+    		$content = array(
+    			'ToUserName'    => $this->from_username,
+    			'FromUserName'  => $this->to_username,
+    			'CreateTime'    => SYS_TIME,
+    			'MsgType'       => 'news',
+    			'ArticleCount'	=> $count,
+    			'Articles'		=> $articles
+    		);
 		} else {
 			$ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
 	    	$config = array();
@@ -134,7 +141,6 @@ class mp_zjd extends platform_abstract
 	            $articles[0]['Title'] = $mediaInfo['title'];
 	            $articles[0]['Description'] = $desc;
 	            $articles[0]['PicUrl'] = RC_Upload::upload_url($mediaInfo['file']);
-// 	            $articles[0]['Url'] = $mediaInfo['link'];
 	            $articles[0]['Url'] = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $_GET['uuid']));
 	            $count = count($articles);
 	            $content = array(
