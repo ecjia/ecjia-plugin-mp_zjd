@@ -87,16 +87,18 @@ class mp_zjd extends PlatformAbstract
         return $this->loadPluginData(RC_Plugin::plugin_dir_path(__FILE__) . '/languages/'.$locale.'/plugin.lang.php', $key, $default);
     }
     
-// 	/**
-// 	 * 获取插件配置信息
-// 	 */
-// 	public function local_config() {
-// 		$config = include(RC_Plugin::plugin_dir_path(__FILE__) . 'config.php');
-// 		if (is_array($config)) {
-// 			return $config;
-// 		}
-// 		return array();
-// 	}
+    /**
+     * 获取iconUrl
+     * {@inheritDoc}
+     * @see \Ecjia\App\Platform\Plugin\PlatformAbstract::getPluginIconUrl()
+     */
+    public function getPluginIconUrl()
+    {
+        if ($this->loadConfig('ext_icon')) {
+            return RC_Plugin::plugin_dir_url(__FILE__) . $this->loadConfig('ext_icon');
+        }
+        return '';
+    }
 	
     public function event_reply() {
     	$wechat_point_db = RC_Loader::load_app_model('wechat_point_model','wechat');
