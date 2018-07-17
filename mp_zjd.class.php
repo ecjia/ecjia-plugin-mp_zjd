@@ -238,30 +238,32 @@ class mp_zjd extends PlatformAbstract
      * 执行赠送积分
      */
     public function do_point($openid, $info, $point_value, $getUserId) {
-    	$users_db 			= RC_Loader::load_app_model('users_model','user');
-    	$account_log_db 	= RC_Loader::load_app_model('account_log_model','user');
+//     	$users_db 			= RC_Loader::load_app_model('users_model','user');
+//     	$account_log_db 	= RC_Loader::load_app_model('account_log_model','user');
     	$wechat_point_db	= RC_Loader::load_app_model('wechat_point_model','wechat');
     	
     	$time = RC_Time::gmtime();
-    	$rank_points = $users_db->where(array('user_id' => $getUserId))->get_field('rank_points');
+//     	$rank_points = $users_db->where(array('user_id' => $getUserId))->get_field('rank_points');
     	
-    	$point = array(
-    		'rank_points' => intval($rank_points) + intval($point_value)
-    	);
+//     	$point = array(
+//     		'rank_points' => intval($rank_points) + intval($point_value)
+//     	);
     	
-    	$users_db->where(array('user_id' => $getUserId))->update($point);
+//     	$users_db->where(array('user_id' => $getUserId))->update($point);
         	
     	// 积分记录
+    	
+//     	$data['user_money'] = 0;
+//     	$data['frozen_money'] = 0;
+//     	$data['pay_points'] = 0;
+//     	$data['change_time'] = $time;
     	$data['user_id'] = $getUserId;
-    	$data['user_money'] = 0;
-    	$data['frozen_money'] = 0;
     	$data['rank_points'] = $point_value;
-    	$data['pay_points'] = 0;
-    	$data['change_time'] = $time;
-    	$data['change_desc'] = '积分赠送';
+    	$data['change_desc'] = '积分赠送-微信砸金蛋';
     	$data['change_type'] = ACT_OTHER;
     	
-    	$log_id = $account_log_db->insert($data);
+//     	$log_id = $account_log_db->insert($data);
+    	$log_id = RC_Api::api('user', 'rank_points_change_log', $data);
     	
     	// 从表记录
     	$data1['log_id'] = $log_id;
