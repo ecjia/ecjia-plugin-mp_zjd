@@ -46,11 +46,11 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 return array(
-    'ext_code'      => 'mp_zjd',
+    'ext_code'              => 'mp_zjd',
     
-    'ext_icon'      => 'images/icon_zjd.png',
+    'ext_icon'              => 'images/icon_zjd.png',
 
-    'support_platform' => 'wechat', //仅支持微信公众平台
+    'support_platform'      => 'wechat', //仅支持微信公众平台
 
     'support_platform_type' => ['service'], //仅支持微信服务号
 			

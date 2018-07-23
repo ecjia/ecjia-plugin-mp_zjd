@@ -48,48 +48,56 @@ RC_Loader::load_app_class('platform_interface', 'platform', false);
 class mp_zjd_init implements platform_interface {
     
     public function action() {
-        $css_url = RC_Plugin::plugins_url('css/style.css', __FILE__);
-    	$jq_url = RC_Plugin::plugins_url('js/jquery.js', __FILE__);
-    	$tplpath = RC_Plugin::plugin_dir_path(__FILE__) . 'templates/zjd_index.dwt.php';
+        ##  载入插件素材
+        $css_url    = RC_Plugin::plugins_url('css/style.css', __FILE__);
+    	$jq_url     = RC_Plugin::plugins_url('js/jquery.js', __FILE__);
+    	$tplpath    = RC_Plugin::plugin_dir_path(__FILE__) . 'templates/zjd_index.dwt.php';
     	RC_Loader::load_app_class('platform_account', 'platform', false);
     	
     	ecjia_front::$controller->assign('jq_url',$jq_url);
     	ecjia_front::$controller->assign('css_url',$css_url);
-    	
-    	$img6= RC_Plugin::plugins_url('images/img-6.png',__FILE__);  
-    	$img4= RC_Plugin::plugins_url('images/img-4.png',__FILE__);
-    	$egg1= RC_Plugin::plugins_url('images/egg_1.png',__FILE__);
-    	$egg2= RC_Plugin::plugins_url('images/egg_2.png',__FILE__);
-    	ecjia_front::$controller->assign('img6',$img6);
-    	ecjia_front::$controller->assign('img4',$img4);
+
+        $img4   = RC_Plugin::plugins_url('images/img-4.png',__FILE__);
+        $img6   = RC_Plugin::plugins_url('images/img-6.png',__FILE__);
+    	$egg1   = RC_Plugin::plugins_url('images/egg_1.png',__FILE__);
+    	$egg2   = RC_Plugin::plugins_url('images/egg_2.png',__FILE__);
+        ecjia_front::$controller->assign('img4',$img4);
+        ecjia_front::$controller->assign('img6',$img6);
     	ecjia_front::$controller->assign('egg1',$egg1);
     	ecjia_front::$controller->assign('egg2',$egg2);
     	
-    	$platform_config_db = RC_Loader::load_app_model('platform_config_model','platform');
-    	$wechat_prize_db = RC_Loader::load_app_model('wechat_prize_model','wechat');
-    	$wechat_prize_view_db = RC_Loader::load_app_model('wechat_prize_viewmodel','wechat');
-    	
+    	$platform_config_db     = RC_Loader::load_app_model('platform_config_model','platform');
+    	$wechat_prize_db        = RC_Loader::load_app_model('wechat_prize_model','wechat');
+    	$wechat_prize_view_db   = RC_Loader::load_app_model('wechat_prize_viewmodel','wechat');
+
+    	// 获取GET请求数据
     	$openid = trim($_GET['openid']);
-    	$uuid = trim($_GET['uuid']);
-    	$account = platform_account::make($uuid);
-    	$wechat_id = $account->getAccountID();
-    	$ext_config  = $platform_config_db->where(array('account_id' => $wechat_id,'ext_code'=>'mp_zjd'))->get_field('ext_config');
-    	$config = array();
+    	$uuid   = trim($_GET['uuid']);
+
+    	$account        = platform_account::make($uuid);
+    	$wechat_id      = $account->getAccountID();
+    	$ext_config     = $platform_config_db->where(array('account_id' => $wechat_id,'ext_code'=>'mp_zjd'))->get_field('ext_config');
+
     	$config = unserialize($ext_config);
     	
     	foreach ($config as $k => $v) {
+    	    // 开始时间
     		if ($v['name'] == 'starttime') {
     			$starttime = $v['value'];
     		}
+    		// 结束时间
     		if ($v['name'] == 'endtime') {
     			$endtime = $v['value'];
     		}
+    		// 奖品名称
     		if ($v['name'] == 'prize_num') {
     			$prize_num = $v['value'];
     		}
+    		// 奖品描述
     		if ($v['name'] == 'description') {
     			$description = $v['value'];
     		}
+    		// 奖品列表
     		if ($v['name'] == 'list') {
     			$list = explode("\n",$v['value']);
     			foreach ($list as $k => $v){

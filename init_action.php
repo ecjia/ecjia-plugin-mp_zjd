@@ -46,17 +46,19 @@
 //
 RC_Loader::load_app_class('platform_interface', 'platform', false);
 class mp_zjd_init_action implements platform_interface {
-    
+
     public function action() {
     	$platform_config_db = RC_Loader::load_app_model('platform_config_model','platform');
     	$wechat_prize_db = RC_Loader::load_app_model('wechat_prize_model','wechat');
     	RC_Loader::load_app_class('platform_account', 'platform', false);
-    	
-    	$openid = trim($_GET['openid']);
-    	$uuid = trim($_GET['uuid']);
-    	$account = platform_account::make($uuid);
-    	$wechat_id = $account->getAccountID();
 
+    	## 获取GET请求数据
+    	$openid     = trim($_GET['openid']);
+    	$uuid       = trim($_GET['uuid']);
+    	$account    = platform_account::make($uuid);
+    	$wechat_id  = $account->getAccountID();
+
+    	## 判断是否登陆
     	$rs = array();
     	if (empty($openid)) {
     		$rs['status'] = 2;
@@ -66,7 +68,6 @@ class mp_zjd_init_action implements platform_interface {
     	}
     	
     	$ext_config  = $platform_config_db->where(array('account_id' => $wechat_id,'ext_code'=>'mp_zjd'))->get_field('ext_config');
-    	$config = array();
     	$config = unserialize($ext_config);
     	foreach ($config as $k => $v) {
     		if ($v['name'] == 'starttime') {
@@ -85,13 +86,15 @@ class mp_zjd_init_action implements platform_interface {
     			}
     		}
     	}
-    	 
+
+    	// 判断砸金蛋时间时间是否开始
     	if (time() < $starttime) {
     		$rs['status'] = 2;
     		$rs['msg'] = '砸金蛋活动还未开始';
     		echo json_encode($rs);
     		exit();
     	}
+    	//判断砸金蛋时间时间是否结束
     	if (time() > $endtime) {
     		$rs['status'] = 2;
     		$rs['msg'] = '砸金蛋活动已经结束';
@@ -109,6 +112,7 @@ class mp_zjd_init_action implements platform_interface {
     	} else {
     		$num = 1;
     	}
+    	// 判断抽奖次数
     	if ($num > $prize_num) {
     		$rs['status'] = 2;
     		$rs['msg'] = '抱歉，抽奖次数已用光';
