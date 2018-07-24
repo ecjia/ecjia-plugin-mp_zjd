@@ -175,7 +175,7 @@ class mp_zjd extends PlatformAbstract
     			'Articles'		=> $articles
     		);
 		} else {
-			$ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
+            $ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
 	    	$config = array();
 	    	$config = unserialize($ext_config);
 	    	foreach ($config as $k => $v) {
@@ -210,7 +210,8 @@ class mp_zjd extends PlatformAbstract
 	            $this->give_point($openid, $info, $getUserId);
 			} 
 		}
-		return $content;
+		return WechatRecord::News_reply($this->getMessage(),$content);
+//        return $content;
     }
     
     /**
