@@ -50,6 +50,8 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 use Ecjia\App\Platform\Plugin\PlatformAbstract;
+use Ecjia\App\Wechat\WechatRecord;
+use Ecjia\App\Wechat\WechatUser;
 
 // RC_Loader::load_app_class('platform_abstract', 'platform', false);
 class mp_zjd extends PlatformAbstract
@@ -106,43 +108,55 @@ class mp_zjd extends PlatformAbstract
      * @see \Ecjia\App\Platform\Plugin\PlatformAbstract::eventReply()
      */
     public function eventReply() {
-    	$wechat_point_db = RC_Loader::load_app_model('wechat_point_model','wechat');
-    	$platform_config = RC_Loader::load_app_model('platform_config_model','platform');
-    	$users_db = RC_Loader::load_app_model('users_model','user');
-    	$media_db = RC_Loader::load_app_model('wechat_media_model', 'wechat');
-    	$connect_db = RC_Loader::load_app_model('connect_user_model', 'connect');
+        // 获取微信信息
+        $wechatUUID = new \Ecjia\App\Wechat\WechatUUID();
+        $wechat_id = $wechatUUID->getWechatID();
+        $uuid   = $wechatUUID->getUUID();
+        $openid = $this->getMessage()->get('FromUserName');
+        $time   = RC_Time::gmtime();
+
+        $wechat_user = new WechatUser($wechat_id, $openid);
+        $unionid = $wechat_user->getUnionid();
+
+    	$wechat_point_db    = RC_Loader::load_app_model('wechat_point_model','wechat');
+    	$platform_config    = RC_Loader::load_app_model('platform_config_model','platform');
+    	$users_db           = RC_Loader::load_app_model('users_model','user');
+    	$media_db           = RC_Loader::load_app_model('wechat_media_model', 'wechat');
+    	$connect_db         = RC_Loader::load_app_model('connect_user_model', 'connect');
     	
     	RC_Loader::load_app_class('platform_account', 'platform', false);
     	RC_Loader::load_app_class('wechat_user', 'wechat', false);
     	RC_Loader::load_app_func('global','wechat');
-    	
-    	$time = RC_Time::gmtime();
-    	$openid = $this->from_username;
-    	$uuid = trim($_GET['uuid']);
-    	$account = platform_account::make($uuid);
-    	$wechat_id = $account->getAccountID();
-    	$wechat_user = new wechat_user($wechat_id, $openid);
-    	
-    	$info = $platform_config->find(array('account_id' => $wechat_id, 'ext_code'=>'mp_zjd'));
-    
-    	$ect_uid = $wechat_user->getUserId();
-    	$unionid = $wechat_user->getUnionid();
-    	$connect_user = new \Ecjia\App\Connect\ConnectUser('sns_wechat', $unionid, 'user');
-    	$getUserId = $connect_user->getUserId();
+
+    	$info           = $platform_config->find(array('account_id' => $wechat_id, 'ext_code'=>'mp_zjd'));
+
+        $ect_uid = $wechat_user->getEcjiaUserId();
+        $connect_user = $wechat_user->getConnectUser();
+    	$getUserId      = $connect_user->getUserId();
     	
     	if (!$connect_user->checkUser()) {
     		//合并ect_uid旧的数据处理
 			if(!empty($ect_uid)){
-				$query = $connect_db->where(array('open_id'=>$unionid, 'connect_code'=>'sns_wechat'))->count();
+			    $query = RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->count();
+//				$query = $connect_db->where(array('open_id'=>$unionid, 'connect_code'=>'sns_wechat'))->count();
 				if($query > 0){
-					$connect_db->where(array('open_id' => $unionid, 'connect_code'=>'sns_wechat'))->update(array('user_id' => $ect_uid));
+                    RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->update(array('user_id' => $ect_uid));
+//					$connect_db->where(array('open_id' => $unionid, 'connect_code'=>'sns_wechat'))->update(array('user_id' => $ect_uid));
 				}else{
-					$data['connect_code'] = 'sns_wechat';
-					$data['user_id'] = $ect_uid;
-					$data['is_admin'] = 0;
-					$data['open_id'] = $unionid;
-					$data['create_at'] = $time;
-					$connect_db->insert($data);
+				    $data=[
+				        'connect_code' => 'sns_wechat',
+                        'user_id' => $ect_uid,
+                        'is_admin' => 0,
+                        'open_id' => $unionid,
+                        'create_at' => $time
+                    ];
+                    RC_DB::table('connect')->insert([$data]);
+//					$data['connect_code']   = 'sns_wechat';
+//					$data['user_id']        = $ect_uid;
+//					$data['is_admin']       = 0;
+//					$data['open_id']        = $unionid;
+//					$data['create_at']      = $time;
+//					$connect_db->insert($data);
 				}
 			}
 			//组合类似模板信息
@@ -179,10 +193,10 @@ class mp_zjd extends PlatformAbstract
 	            } else {
 	            	$desc = msubstr(strip_tags(html_out($mediaInfo['content'])),100);
 	            }
-	            $articles[0]['Title'] = $mediaInfo['title'];
+	            $articles[0]['Title']       = $mediaInfo['title'];
 	            $articles[0]['Description'] = $desc;
-	            $articles[0]['PicUrl'] = RC_Upload::upload_url($mediaInfo['file']);
-	            $articles[0]['Url'] = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $_GET['uuid']));
+	            $articles[0]['PicUrl']      = RC_Upload::upload_url($mediaInfo['file']);
+	            $articles[0]['Url']         = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $_GET['uuid']));
 	            $count = count($articles);
 	            $content = array(
                      'ToUserName'   => $this->from_username,
@@ -257,19 +271,19 @@ class mp_zjd extends PlatformAbstract
 //     	$data['frozen_money'] = 0;
 //     	$data['pay_points'] = 0;
 //     	$data['change_time'] = $time;
-    	$data['user_id'] = $getUserId;
-    	$data['rank_points'] = $point_value;
-    	$data['change_desc'] = '积分赠送-微信砸金蛋';
-    	$data['change_type'] = ACT_OTHER;
+    	$data['user_id']        = $getUserId;
+    	$data['rank_points']    = $point_value;
+    	$data['change_desc']    = '积分赠送-微信砸金蛋';
+    	$data['change_type']    = ACT_OTHER;
     	
 //     	$log_id = $account_log_db->insert($data);
     	$log_id = RC_Api::api('user', 'rank_points_change_log', $data);
     	
     	// 从表记录
-    	$data1['log_id'] = $log_id;
-    	$data1['openid'] = $openid;
-    	$data1['keywords'] = $info['ext_code'];
-    	$data1['createtime'] = $time;
+    	$data1['log_id']        = $log_id;
+    	$data1['openid']        = $openid;
+    	$data1['keywords']      = $info['ext_code'];
+    	$data1['createtime']    = $time;
     	
     	$log_id = $wechat_point_db->insert($data1);
     }
