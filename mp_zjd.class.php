@@ -118,17 +118,17 @@ class mp_zjd extends PlatformAbstract
         $wechat_user = new WechatUser($wechat_id, $openid);
         $unionid = $wechat_user->getUnionid();
 
-    	$wechat_point_db    = RC_Loader::load_app_model('wechat_point_model','wechat');
-    	$platform_config    = RC_Loader::load_app_model('platform_config_model','platform');
-    	$users_db           = RC_Loader::load_app_model('users_model','user');
-    	$media_db           = RC_Loader::load_app_model('wechat_media_model', 'wechat');
-    	$connect_db         = RC_Loader::load_app_model('connect_user_model', 'connect');
+//    	$wechat_point_db    = RC_Loader::load_app_model('wechat_point_model','wechat');
+//    	$platform_config    = RC_Loader::load_app_model('platform_config_model','platform');
+//    	$users_db           = RC_Loader::load_app_model('users_model','user');
+//    	$media_db           = RC_Loader::load_app_model('wechat_media_model', 'wechat');
+//    	$connect_db         = RC_Loader::load_app_model('connect_user_model', 'connect');
     	
-    	RC_Loader::load_app_class('platform_account', 'platform', false);
-    	RC_Loader::load_app_class('wechat_user', 'wechat', false);
-    	RC_Loader::load_app_func('global','wechat');
-
-    	$info           = $platform_config->find(array('account_id' => $wechat_id, 'ext_code'=>'mp_zjd'));
+//    	RC_Loader::load_app_class('platform_account', 'platform', false);
+//    	RC_Loader::load_app_class('wechat_user', 'wechat', false);
+//    	RC_Loader::load_app_func('global','wechat');
+//
+//    	$info           = $platform_config->find(array('account_id' => $wechat_id, 'ext_code'=>'mp_zjd'));
 
         $ect_uid = $wechat_user->getEcjiaUserId();
         $connect_user = $wechat_user->getConnectUser();
@@ -164,62 +164,55 @@ class mp_zjd extends PlatformAbstract
     		$articles = [
     		    'Title'         => '未绑定',
     		    'Description'   => '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作',
-    		    'Url'           => RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid)),
+    		    'Url'           => RC_Uri::url('wechat/mobile_userbind/init', array('openid' => $openid, 'uuid' => $uuid)),
     		    'PicUrl'        => '',
             ];
             return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
-
-//    		$articles[0]['Title'] = '未绑定';
-//    		$articles[0]['PicUrl'] = '';
-//    		$articles[0]['Description'] = '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作';
-//    		$articles[0]['Url'] = RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid));
-//    		$count = count($articles);
-//    		$content = array(
-//    			'ToUserName'    => $this->from_username,
-//    			'FromUserName'  => $this->to_username,
-//    			'CreateTime'    => SYS_TIME,
-//    			'MsgType'       => 'news',
-//    			'ArticleCount'	=> $count,
-//    			'Articles'		=> $articles
-//    		);
 		} else {
-            $ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
-	    	$config = array();
-	    	$config = unserialize($ext_config);
-	    	foreach ($config as $k => $v) {
-				if ($v['name'] == 'media_id') {
-					$media_id = $v['value'];
-				}
-			}
-			//页面信息
-			if (isset($media_id) && ! empty($media_id)) {
-				$field='id, title, content, digest, file, type, file_name, link';
-				$mediaInfo = $media_db->field($field)->find(array('id' => $media_id));
-				$articles = array();
-	            if (!empty($mediaInfo['digest'])){
-	            	$desc = $mediaInfo['digest'];
-	            } else {
-	            	$desc = msubstr(strip_tags(html_out($mediaInfo['content'])),100);
-	            }
-	            $articles[0]['Title']       = $mediaInfo['title'];
-	            $articles[0]['Description'] = $desc;
-	            $articles[0]['PicUrl']      = RC_Upload::upload_url($mediaInfo['file']);
-	            $articles[0]['Url']         = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $_GET['uuid']));
-	            $count = count($articles);
-	            $content = array(
-                     'ToUserName'   => $this->from_username,
-                     'FromUserName' => $this->to_username,
-                     'CreateTime'   => SYS_TIME,
-                     'MsgType'      => 'news',
-                     'ArticleCount' =>$count,
-                     'Articles'     =>$articles
-                );
+//            $ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
+//	    	$config = array();
+//	    	$config = unserialize($ext_config);
+//	    	foreach ($config as $k => $v) {
+//				if ($v['name'] == 'media_id') {
+//					$media_id = $v['value'];
+//				}
+//			}
+
+//			//页面信息
+//			if (isset($media_id) && ! empty($media_id)) {
+//				$field='id, title, content, digest, file, type, file_name, link';
+//				$mediaInfo = $media_db->field($field)->find(array('id' => $media_id));
+//				$articles = array();
+//	            if (!empty($mediaInfo['digest'])){
+//	            	$desc = $mediaInfo['digest'];
+//	            } else {
+//	            	$desc = msubstr(strip_tags(html_out($mediaInfo['content'])),100);
+//	            }
+//	            $articles[0]['Title']       = $mediaInfo['title'];
+//	            $articles[0]['Description'] = $desc;
+//	            $articles[0]['PicUrl']      = RC_Upload::upload_url($mediaInfo['file']);
+//	            $articles[0]['Url']         = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $_GET['uuid']));
+//	            $count = count($articles);
+//	            $content = array(
+//                     'ToUserName'   => $this->from_username,
+//                     'FromUserName' => $this->to_username,
+//                     'CreateTime'   => SYS_TIME,
+//                     'MsgType'      => 'news',
+//                     'ArticleCount' =>$count,
+//                     'Articles'     =>$articles
+//                );
 	            // 积分赠送
-	            $this->give_point($openid, $info, $getUserId);
-			} 
-		}
-		return WechatRecord::News_reply($this->getMessage(),$content);
-//        return $content;
+//	            $this->give_point($openid, $info, $getUserId);
+//			}
+
+            $articles = [
+                'Title'         => '砸金蛋',
+                'Description'   => '快来参与活动吧~~',
+                'Url'           => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid)),
+                'PicUrl'        => RC_Plugin::plugin_dir_url(__FILE__) . '/images/wechat_thumb_pic.png',
+            ];
+            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
+        }
     }
     
     /**
