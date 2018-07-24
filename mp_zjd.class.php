@@ -134,7 +134,7 @@ class mp_zjd extends PlatformAbstract
         $connect_user = $wechat_user->getConnectUser();
     	$getUserId      = $connect_user->getUserId();
     	
-    	if (!$connect_user->checkUser()) {
+    	if (! $connect_user->checkUser()) {
     		//合并ect_uid旧的数据处理
 			if(!empty($ect_uid)){
 			    $query = RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->count();
@@ -159,21 +159,29 @@ class mp_zjd extends PlatformAbstract
 //					$connect_db->insert($data);
 				}
 			}
-			//组合类似模板信息
-    		$articles = array();
-    		$articles[0]['Title'] = '未绑定';
-    		$articles[0]['PicUrl'] = '';
-    		$articles[0]['Description'] = '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作';
-    		$articles[0]['Url'] = RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid));
-    		$count = count($articles);
-    		$content = array(
-    			'ToUserName'    => $this->from_username,
-    			'FromUserName'  => $this->to_username,
-    			'CreateTime'    => SYS_TIME,
-    			'MsgType'       => 'news',
-    			'ArticleCount'	=> $count,
-    			'Articles'		=> $articles
-    		);
+
+			//未绑定用户提示操作
+    		$articles = [
+    		    'Title'         => '未绑定',
+    		    'Description'   => '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作',
+    		    'Url'           => RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid)),
+    		    'PicUrl'        => '',
+            ];
+            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
+
+//    		$articles[0]['Title'] = '未绑定';
+//    		$articles[0]['PicUrl'] = '';
+//    		$articles[0]['Description'] = '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作';
+//    		$articles[0]['Url'] = RC_Uri::url('wechat/mobile_userbind/init',array('openid' => $openid, 'uuid' => $uuid));
+//    		$count = count($articles);
+//    		$content = array(
+//    			'ToUserName'    => $this->from_username,
+//    			'FromUserName'  => $this->to_username,
+//    			'CreateTime'    => SYS_TIME,
+//    			'MsgType'       => 'news',
+//    			'ArticleCount'	=> $count,
+//    			'Articles'		=> $articles
+//    		);
 		} else {
             $ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
 	    	$config = array();
