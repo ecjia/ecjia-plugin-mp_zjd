@@ -118,6 +118,10 @@ class mp_zjd extends PlatformAbstract
         $wechat_user = new WechatUser($wechat_id, $openid);
         $unionid = $wechat_user->getUnionid();
 
+        $ect_uid = $wechat_user->getEcjiaUserId();
+        $connect_user = $wechat_user->getConnectUser();
+        $getUserId      = $connect_user->getUserId();
+
 //    	$wechat_point_db    = RC_Loader::load_app_model('wechat_point_model','wechat');
 //    	$platform_config    = RC_Loader::load_app_model('platform_config_model','platform');
 //    	$users_db           = RC_Loader::load_app_model('users_model','user');
@@ -130,9 +134,7 @@ class mp_zjd extends PlatformAbstract
 //
 //    	$info           = $platform_config->find(array('account_id' => $wechat_id, 'ext_code'=>'mp_zjd'));
 
-        $ect_uid = $wechat_user->getEcjiaUserId();
-        $connect_user = $wechat_user->getConnectUser();
-    	$getUserId      = $connect_user->getUserId();
+
     	
     	if (! $connect_user->checkUser()) {
     		//合并ect_uid旧的数据处理
