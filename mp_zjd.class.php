@@ -108,15 +108,36 @@ class mp_zjd extends PlatformAbstract
      * @see \Ecjia\App\Platform\Plugin\PlatformAbstract::eventReply()
      */
     public function eventReply() {
-        // 获取微信信息
-        $wechatUUID = new \Ecjia\App\Wechat\WechatUUID();
-        $wechat_id = $wechatUUID->getWechatID();
-        $uuid   = $wechatUUID->getUUID();
-        $openid = $this->getMessage()->get('FromUserName');
-        $time   = RC_Time::gmtime();
 
-        $wechat_user = new WechatUser($wechat_id, $openid);
-        $unionid = $wechat_user->getUnionid();
+        $openid = $this->getMessage()->get('FromUserName');
+        $wechatUUID = new \Ecjia\App\Wechat\WechatUUID();
+        $uuid   = $wechatUUID->getUUID();
+
+        if (! $this->hasBindUser()) {
+
+            return $this->forwardCommand('mp_userbind');
+
+        } else {
+
+            $articles = [
+                'Title'         => '砸金蛋',
+                'Description'   => '快来参与活动吧~~',
+                'Url'           => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid)),
+                'PicUrl'        => RC_Plugin::plugin_dir_url(__FILE__) . '/images/wechat_thumb_pic.jpg',
+            ];
+            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
+        }
+
+
+//        // 获取微信信息
+//        $wechatUUID = new \Ecjia\App\Wechat\WechatUUID();
+//        $wechat_id = $wechatUUID->getWechatID();
+//        $uuid   = $wechatUUID->getUUID();
+//        $openid = $this->getMessage()->get('FromUserName');
+//        $time   = RC_Time::gmtime();
+//
+//        $wechat_user = new WechatUser($wechat_id, $openid);
+//        $unionid = $wechat_user->getUnionid();
 
 //    	$wechat_point_db    = RC_Loader::load_app_model('wechat_point_model','wechat');
 //    	$platform_config    = RC_Loader::load_app_model('platform_config_model','platform');
@@ -130,45 +151,45 @@ class mp_zjd extends PlatformAbstract
 //
 //    	$info           = $platform_config->find(array('account_id' => $wechat_id, 'ext_code'=>'mp_zjd'));
 
-        $ect_uid = $wechat_user->getEcjiaUserId();
-        $connect_user = $wechat_user->getConnectUser();
-    	$getUserId      = $connect_user->getUserId();
+//        $ect_uid = $wechat_user->getEcjiaUserId();
+//        $connect_user = $wechat_user->getConnectUser();
+//    	$getUserId      = $connect_user->getUserId();
     	
-    	if (! $connect_user->checkUser()) {
-    		//合并ect_uid旧的数据处理
-			if(!empty($ect_uid)){
-			    $query = RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->count();
-//				$query = $connect_db->where(array('open_id'=>$unionid, 'connect_code'=>'sns_wechat'))->count();
-				if($query > 0){
-                    RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->update(array('user_id' => $ect_uid));
-//					$connect_db->where(array('open_id' => $unionid, 'connect_code'=>'sns_wechat'))->update(array('user_id' => $ect_uid));
-				}else{
-				    $data=[
-				        'connect_code' => 'sns_wechat',
-                        'user_id' => $ect_uid,
-                        'is_admin' => 0,
-                        'open_id' => $unionid,
-                        'create_at' => $time
-                    ];
-                    RC_DB::table('connect')->insert([$data]);
-//					$data['connect_code']   = 'sns_wechat';
-//					$data['user_id']        = $ect_uid;
-//					$data['is_admin']       = 0;
-//					$data['open_id']        = $unionid;
-//					$data['create_at']      = $time;
-//					$connect_db->insert($data);
-				}
-			}
+//    	if (! $this->hasBindUser()) {
+//    		//合并ect_uid旧的数据处理
+//			if(!empty($ect_uid)){
+//			    $query = RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->count();
+////				$query = $connect_db->where(array('open_id'=>$unionid, 'connect_code'=>'sns_wechat'))->count();
+//				if($query > 0){
+//                    RC_DB::table('connect')->where('connect_code','sns_wechat')->where('open_id',$unionid)->update(array('user_id' => $ect_uid));
+////					$connect_db->where(array('open_id' => $unionid, 'connect_code'=>'sns_wechat'))->update(array('user_id' => $ect_uid));
+//				}else{
+//				    $data=[
+//				        'connect_code' => 'sns_wechat',
+//                        'user_id' => $ect_uid,
+//                        'is_admin' => 0,
+//                        'open_id' => $unionid,
+//                        'create_at' => $time
+//                    ];
+//                    RC_DB::table('connect')->insert([$data]);
+////					$data['connect_code']   = 'sns_wechat';
+////					$data['user_id']        = $ect_uid;
+////					$data['is_admin']       = 0;
+////					$data['open_id']        = $unionid;
+////					$data['create_at']      = $time;
+////					$connect_db->insert($data);
+//				}
+//			}
 
 			//未绑定用户提示操作
-    		$articles = [
-    		    'Title'         => '未绑定',
-    		    'Description'   => '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作',
-    		    'Url'           => RC_Uri::url('wechat/mobile_userbind/init', array('openid' => $openid, 'uuid' => $uuid)),
-    		    'PicUrl'        => '',
-            ];
-            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
-		} else {
+//    		$articles = [
+//    		    'Title'         => '未绑定',
+//    		    'Description'   => '抱歉，目前您还未进行账号绑定，需点击该链接进行绑定操作',
+//    		    'Url'           => RC_Uri::url('wechat/mobile_userbind/init', array('openid' => $openid, 'uuid' => $uuid)),
+//    		    'PicUrl'        => '',
+//            ];
+//            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
+//		} else {
 //            $ext_config  = $platform_config->where(array('account_id' => $wechat_id, 'ext_code'=>$info['ext_code']))->get_field('ext_config');
 //	    	$config = array();
 //	    	$config = unserialize($ext_config);
@@ -205,14 +226,14 @@ class mp_zjd extends PlatformAbstract
 //	            $this->give_point($openid, $info, $getUserId);
 //			}
 
-            $articles = [
-                'Title'         => '砸金蛋',
-                'Description'   => '快来参与活动吧~~',
-                'Url'           => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid)),
-                'PicUrl'        => RC_Plugin::plugin_dir_url(__FILE__) . '/images/wechat_thumb_pic.jpg',
-            ];
-            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
-        }
+//            $articles = [
+//                'Title'         => '砸金蛋',
+//                'Description'   => '快来参与活动吧~~',
+//                'Url'           => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid)),
+//                'PicUrl'        => RC_Plugin::plugin_dir_url(__FILE__) . '/images/wechat_thumb_pic.jpg',
+//            ];
+//            return WechatRecord::News_reply($this->getMessage(), $articles['Title'], $articles['Description'], $articles['Url'], $articles['PicUrl']);
+//        }
     }
     
     /**
