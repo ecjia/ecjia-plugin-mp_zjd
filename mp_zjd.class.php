@@ -47,13 +47,11 @@
 /**
  * 微信砸金蛋
  */
-defined('IN_ECJIA') or exit('No permission resources.');
-
 use Ecjia\App\Platform\Plugin\PlatformAbstract;
 use Ecjia\App\Wechat\WechatRecord;
-use Ecjia\App\Wechat\WechatUser;
 
-// RC_Loader::load_app_class('platform_abstract', 'platform', false);
+defined('IN_ECJIA') or exit('No permission resources.');
+
 class mp_zjd extends PlatformAbstract
 {    
 
