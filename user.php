@@ -62,7 +62,8 @@ class mp_zjd_user implements platform_interface {
     	
     	if (!empty($_GET['id'])) {
     		$id = trim($_GET['id']);
-    		$rs = $wechat_prize_db->where(array('openid' => $openid,'id' => $id))->get_field('winner');
+    		//$rs = $wechat_prize_db->where(array('openid' => $openid,'id' => $id))->get_field('winner');
+    		$rs = RC_DB::table('market_activity_log')->where('user_id', $openid)->where('id', $id)->pluck('issue_extend');
     		if (!empty($rs)) {
     			ecjia_front::$controller->showmessage('已经领取', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
@@ -74,6 +75,7 @@ class mp_zjd_user implements platform_interface {
     	if ($_POST) {
     		$id = trim($_POST['id']);
     		$data = $_POST['data'];
+    		
     		if (empty($id)) {
     			ecjia_front::$controller->showmessage('请选择中奖的奖品', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
@@ -86,8 +88,9 @@ class mp_zjd_user implements platform_interface {
     		if (empty($data['address'])) {
     			ecjia_front::$controller->showmessage('请填写详细地址', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     		}
-    		$winner['winner'] = serialize($data);
-    		$wechat_prize_db->where(array('id' => $id))->update($winner);
+    		$winner['issue_extend'] = serialize($data);
+    		//$wechat_prize_db->where(array('id' => $id))->update($winner);
+    		RC_DB::table('market_activity_log')->where('id', $id)->update($winner);
     		ecjia_front::$controller->showmessage('资料提交成功，请等待发放奖品,可以继续砸金蛋哦', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid))));
     	}       
 	}
