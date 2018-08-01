@@ -185,15 +185,15 @@ class mp_zjd_init_action implements platform_interface {
     		//$db_activity_log->where('activity_id', $market_activity['activity_id'])->where('user_id', $openid);//openid
     		$db_market_activity_lottery = RC_DB::table('market_activity_lottery');
     		if ($market_activity['limit_time'] > 0) {
-    			$time_limit = $time - $market_activity['limit_time']*60;
+    			$time_limit = $time - $market_activity['limit_time']*60*60;
     			$db_market_activity_lottery->where('update_time', '<=', $time)->where('add_time', '>=', $time_limit);
     		}
     		$market_activity_lottery_info = RC_DB::table('market_activity_lottery')->where('activity_id', $market_activity['activity_id'])->where('user_id', $openid)->first();
     			
     		$limit_count = $market_activity_lottery_info['lottery_num'];
     		
-    		//当前时间 -上次抽奖更新时间大于限制时间时；重置抽奖时间和抽奖次数；
-    		if ($time - $market_activity_lottery_info['update_time'] >= $market_activity['limit_time']*60) {
+    		//当前时间 -上次抽奖添加时间大于限制时间时；重置抽奖时间和抽奖次数；
+    		if ($time - $market_activity_lottery_info['add_time'] >= $market_activity['limit_time']*60*60) {
     			RC_DB::table('market_activity_lottery')
     			->where('activity_id', $market_activity['activity_id'])
     			->where('user_id', $_SESSION['user_id'])
@@ -311,6 +311,13 @@ class mp_zjd_init_action implements platform_interface {
     	
     	$name = RC_DB::table('wechat_user')->where('openid', $openid)->pluck('nickname');
     	if (in_array($prize_info['prize_type'], array(1,2,3))) {
+    		if ($prize_info['prize_type'] == 2) {
+    			$issue_status = 0;
+    			$issue_time = 0;
+    		} else {
+    			$issue_status = 1;
+    			$issue_time = $time;
+    		}
     		$data = array(
     				'activity_id' 	=> $market_activity['activity_id'],
     				'user_id'		=> $openid,
@@ -320,8 +327,8 @@ class mp_zjd_init_action implements platform_interface {
     				'prize_name'	=> $prize_info['prize_name'],
     				'add_time'		=> RC_Time::gmtime(),
     				'source'		=> 'wechat',
-    				'issue_status'	=> 1,
-    				'add_time'		=> RC_Time::gmtime()
+    				'issue_status'	=> $issue_status,
+    				'issue_time'	=> $issue_time
     		);
     		$id = RC_DB::table('market_activity_log')->insertGetId($data);
     	}

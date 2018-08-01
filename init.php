@@ -131,7 +131,7 @@ class mp_zjd_init implements platform_interface {
     	if ($market_activity['limit_num'] > 0) {
     		$db_market_activity_lottery = RC_DB::table('market_activity_lottery');
     		if ($market_activity['limit_time'] > 0) {
-    			$time_limit = $time - $market_activity['limit_time']*60;
+    			$time_limit = $time - $market_activity['limit_time']*60*60;
     			$db_market_activity_lottery->where('update_time', '<=', $time)->where('add_time', '>=', $time_limit);
     		}
     		$market_activity_lottery_info = RC_DB::table('market_activity_lottery')->where('activity_id', $market_activity['activity_id'])->where('user_id', $openid)->first();
