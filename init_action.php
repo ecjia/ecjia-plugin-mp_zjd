@@ -336,7 +336,8 @@ class mp_zjd_init_action implements platform_interface {
     	//奖品类型为红包或积分为中奖
     	if (in_array($prize_info['prize_type'], array(2)) && !empty($id)) {
     		// 获奖链接
-    		$rs['link'] = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/user', 'name' => 'mp_zjd', 'id' => $id,'openid' => $openid,'uuid' => $uuid));
+    		//$rs['link'] = RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/user', 'name' => 'mp_zjd', 'id' => $id,'openid' => $openid,'uuid' => $uuid));
+    		RC_Uri::url('market/mobile_prize/prize_init', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid, 'activity_id' => $market_activity['activity_id']));
     	}
     	echo json_encode($rs);
     	exit();
