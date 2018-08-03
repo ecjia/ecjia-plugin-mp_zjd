@@ -76,8 +76,7 @@ class mp_zjd_init implements platform_interface {
     	// 获取GET请求数据
     	$openid = trim($_GET['openid']);
     	$uuid   = trim($_GET['uuid']);
-        $prize_url = RC_Uri::url('market/mobile_prize/prize_init', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid));
-        ecjia_front::$controller->assign('prize_url',$prize_url);
+       
 
     	$account        = platform_account::make($uuid);
     	$wechat_id      = $account->getAccountID();
@@ -181,6 +180,9 @@ class mp_zjd_init implements platform_interface {
     		}
     	}
 //  	dd($prize_list,1);
+    	$prize_url = RC_Uri::url('market/mobile_prize/prize_init', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid, 'activity_id' => $market_activity['activity_id']));
+    	ecjia_front::$controller->assign('prize_url',$prize_url);
+    	
     	ecjia_front::$controller->assign('form_action',RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init_action', 'openid' => $openid, 'uuid' => $uuid)));
     	//ecjia_front::$controller->assign('prize',$prize);
     	ecjia_front::$controller->assign('prize',$prize_list);
