@@ -99,13 +99,13 @@
 <script type="text/javascript" src="{$jq_url}"></script>
 <script>
     $(function() {
-//        var ISWeixin = !!navigator.userAgent.match(/MicroMessenger/i); //wp手机无法判断
-//         if(!ISWeixin){
-//             var rd_url = location.href.split('#')[0];  // remove hash
-//             var oauth_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri='+encodeURIComponent(rd_url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
-//             location.href = oauth_url;
-//             return false;
-//         }
+        var ISWeixin = !!navigator.userAgent.match(/MicroMessenger/i); //wp手机无法判断
+         if(!ISWeixin){
+             var rd_url = location.href.split('#')[0];  // remove hash
+             var oauth_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri='+encodeURIComponent(rd_url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+             location.href = oauth_url;
+             return false;
+         }
         var timer,forceStop;
         var wxch_Marquee = function(id){
             try{
