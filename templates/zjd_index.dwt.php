@@ -82,7 +82,7 @@
 <div id="mask"></div>
 <div id="dialog" class="yes">
     <div id="content"></div>
-    <a href="javascript:;" id="link">去看看</a>
+    <a href="{$prize_url}" id="link">去看看</a>
     <button id="close">关闭</button>
 </div>
 <!-- 我的奖品 -->
