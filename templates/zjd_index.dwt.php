@@ -79,6 +79,12 @@
 			{/if}
 		</div>
 	</div>
+<div id="mask"></div>
+<div id="dialog" class="yes">
+    <div id="content"></div>
+    <a href="javascript:;" id="link">去看看</a>
+    <button id="close">关闭</button>
+</div>
 <!-- 我的奖品 -->
 <div style="margin: 0 auto;text-align:center">
     <a href="{$prize_url}"><img src="{$my_prize}" ></a>
@@ -176,23 +182,23 @@
         function wxch_result () {
             var url = '{$form_action}';
             $.get(url,{}, function(data){
-            	$("#mask").show();
+                $("#mask").show();
                 if(data.status == 1){
                     var success= '撒花，恭喜您获得'+'"'+data.msg+'"';
-                	$("#content").html(success);
+                    $("#content").html(success);
                     $(".num").html(data.num);
                     $("#link").attr("href", data.link);
-                	$("#dialog").attr("class",'yes').show();
+                    $("#dialog").attr("class",'yes').show();
                 }
                 else if(data.status == 0){
                     var success= '撒花，恭喜您获得'+'"'+data.msg+'"';
                     $("#content").html(success);
                     $(".num").html(data.num);
-                	$("#dialog").attr("class",'no').show();
+                    $("#dialog").attr("class",'no').show();
                 }
                 else if(data.status == 2){
-                	$("#content").html(data.msg);
-                	$("#dialog").attr("class",'no').show();
+                    $("#content").html(data.msg);
+                    $("#dialog").attr("class",'no').show();
                 }
             }, 'json');
         }
