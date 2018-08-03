@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10,IE=11"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>砸金蛋</title>
-<link rel="stylesheet" type="text/css" href="{$css_url}">
+    <link rel="stylesheet" type="text/css" href="{$css_url}">
 </head>
 <body>
 <div class="grid">
@@ -79,12 +79,12 @@
 			{/if}
 		</div>
 	</div>
-	<div id="mask"></div>
-	<div id="dialog" class="yes">
-		<div id="content"></div>
-		<a href="javascript:;" id="link">去看看</a>
-		<button id="close">关闭</button>
-	</div>
+<!-- 我的奖品 -->
+<div style="margin: 0 auto;text-align:center">
+    <a href="{$prize_url}"><img src="{$my_prize}" ></a>
+</div>
+
+
 </body>
 </html>
 
@@ -92,7 +92,7 @@
 <script type="text/javascript" src="{$jq_url}"></script>
 <script>
     $(function() {
-        var ISWeixin = !!navigator.userAgent.match(/MicroMessenger/i); //wp手机无法判断
+//        var ISWeixin = !!navigator.userAgent.match(/MicroMessenger/i); //wp手机无法判断
 //         if(!ISWeixin){
 //             var rd_url = location.href.split('#')[0];  // remove hash
 //             var oauth_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri='+encodeURIComponent(rd_url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';

@@ -50,7 +50,7 @@ class mp_zjd_init implements platform_interface {
     public function action() {
         ##  载入插件素材
         $css_url    = RC_Plugin::plugins_url('css/style.css', __FILE__);
-    	$jq_url     = RC_Plugin::plugins_url('js/jquery.js', __FILE__);
+        $jq_url     = RC_Plugin::plugins_url('js/jquery.js', __FILE__);
     	$tplpath    = RC_Plugin::plugin_dir_path(__FILE__) . 'templates/zjd_index.dwt.php';
     	RC_Loader::load_app_class('platform_account', 'platform', false);
     	
@@ -61,18 +61,23 @@ class mp_zjd_init implements platform_interface {
         $img6   = RC_Plugin::plugins_url('images/img-6.png',__FILE__);
     	$egg1   = RC_Plugin::plugins_url('images/egg_1.png',__FILE__);
     	$egg2   = RC_Plugin::plugins_url('images/egg_2.png',__FILE__);
+        $my_prize     = RC_Plugin::plugins_url('images/my_prize.png',__FILE__);
+
         ecjia_front::$controller->assign('img4',$img4);
         ecjia_front::$controller->assign('img6',$img6);
     	ecjia_front::$controller->assign('egg1',$egg1);
     	ecjia_front::$controller->assign('egg2',$egg2);
-    	
-    	$platform_config_db     = RC_Loader::load_app_model('platform_config_model','platform');
+        ecjia_front::$controller->assign('my_prize',$my_prize);
+
+        $platform_config_db     = RC_Loader::load_app_model('platform_config_model','platform');
     	$wechat_prize_db        = RC_Loader::load_app_model('wechat_prize_model','wechat');
     	$wechat_prize_view_db   = RC_Loader::load_app_model('wechat_prize_viewmodel','wechat');
 
     	// 获取GET请求数据
     	$openid = trim($_GET['openid']);
     	$uuid   = trim($_GET['uuid']);
+        $prize_url = RC_Uri::url('market/mobile_prize/prize_init', array('handle' => 'mp_zjd/init', 'openid' => $openid, 'uuid' => $uuid));
+        ecjia_front::$controller->assign('prize_url',$prize_url);
 
     	$account        = platform_account::make($uuid);
     	$wechat_id      = $account->getAccountID();
@@ -175,7 +180,7 @@ class mp_zjd_init implements platform_interface {
     			$list[] = $row;
     		}
     	}
-  	
+//  	dd($prize_list,1);
     	ecjia_front::$controller->assign('form_action',RC_Uri::url('platform/plugin/show', array('handle' => 'mp_zjd/init_action', 'openid' => $openid, 'uuid' => $uuid)));
     	//ecjia_front::$controller->assign('prize',$prize);
     	ecjia_front::$controller->assign('prize',$prize_list);
