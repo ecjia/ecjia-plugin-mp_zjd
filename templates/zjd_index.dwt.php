@@ -86,8 +86,8 @@
     <button id="close">关闭</button>
 </div>
 <!-- 我的奖品 -->
-<div class="container" style="margin: 0 auto;text-align:center">
-    <a href="{$prize_url}"><img style="width: 150px;height: 40px" src="{$my_prize}" ></a>
+<div class="content" style="margin: 0 auto;text-align:center">
+    <a href="{$prize_url}"><img style="width: 50%" src="{$my_prize}" ></a>
 </div>
 <div style="margin-bottom: 10px"></div>
 
