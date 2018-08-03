@@ -159,7 +159,7 @@ class mp_zjd_init implements platform_interface {
     		}
     	}
     	//当前活动的奖品类型为红包和积分的奖品
-    	$prize_ids = RC_DB::table('market_activity_prize')->where('activity_id', $market_activity['activity_id'])->whereIn('prize_type', array(1,2,3))->lists('prize_id');
+    	$prize_ids = RC_DB::table('market_activity_prize')->where('activity_id', $market_activity['activity_id'])->whereIn('prize_type', array(1,2,3,6))->lists('prize_id');
     	$winning_list = [];
     	if (!empty($prize_ids)) {
     		$winning_list = RC_DB::table('market_activity_log')->where('activity_id', $market_activity['activity_id'])->where('user_id', $openid)->whereIn('prize_id', $prize_ids)->take(10)->get();
