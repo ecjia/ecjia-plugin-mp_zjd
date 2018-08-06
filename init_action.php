@@ -96,7 +96,7 @@ class mp_zjd_init_action implements PluginPageInterface
             if ($time - $market_activity_lottery_info['add_time'] >= $market_activity['limit_time'] * 60) {
                 RC_DB::table('market_activity_lottery')
                     ->where('activity_id', $market_activity['activity_id'])
-                    ->where('user_id', $_SESSION['user_id'])
+                    ->where('user_id', $openid)
                     ->update(array('add_time' => $time, 'update_time' => $time, 'lottery_num' => 1));
             }
 
