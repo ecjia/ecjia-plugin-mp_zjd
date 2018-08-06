@@ -44,8 +44,11 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-RC_Loader::load_app_class('platform_interface', 'platform', false);
-class mp_zjd_init_action implements platform_interface {
+
+use Ecjia\App\Platform\Frameworks\Contracts\PluginPageInterface;
+
+class mp_zjd_init_action implements PluginPageInterface
+{
 
     public function action() {
     	$platform_config_db = RC_Loader::load_app_model('platform_config_model','platform');

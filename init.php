@@ -44,8 +44,11 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-RC_Loader::load_app_class('platform_interface', 'platform', false);
-class mp_zjd_init implements platform_interface {
+
+use Ecjia\App\Platform\Frameworks\Contracts\PluginPageInterface;
+
+class mp_zjd_init implements PluginPageInterface
+{
     
     public function action() {
         ##  载入插件素材
