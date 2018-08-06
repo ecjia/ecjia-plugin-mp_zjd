@@ -91,11 +91,6 @@
 </div>
 <div style="margin-bottom: 10px"></div>
 
-
-</body>
-</html>
-
-
 <script type="text/javascript" src="{$jq_url}"></script>
 <script>
     $(function() {
@@ -207,3 +202,6 @@
 
 </script>
 <!-- {nocache} -->
+
+</body>
+</html>
