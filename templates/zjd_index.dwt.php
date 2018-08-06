@@ -14,34 +14,34 @@
 <body>
     <div class="grid">
         <div id="hammer">
-            <img src="{$img6}" height="87" width="74" alt="">
+            <img src="{$img_6_png}" height="87" width="74" alt="">
         </div>
         <div id="f">
-            <img src="{$img4}" />
+            <img src="{$img_4_png}" />
         </div>
         <div id="banner">
             <dl>
                 <dt>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                     <a href="javascript:;">
-                        <img src="{$egg1}">
+                        <img src="{$egg_1_png}">
                     </a>
                 </dt>
                 <dd></dd>
@@ -98,7 +98,7 @@
     <!-- 我的奖品 -->
     <div class="prize-btn">
         <a href="{$prize_url}">
-            <img width="50%" src="{$my_prize}">
+            <img width="50%" src="{$my_prize_png}">
         </a>
     </div>
 
