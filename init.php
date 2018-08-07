@@ -72,7 +72,7 @@ class mp_zjd_init extends PluginPageController implements PluginPageInterface
 
         if (! ecjia_is_weixin()) {
             $uuid = trim($_GET['uuid']);
-            $url = with(new WechatAuthorize($uuid))->getAuthorizeUrl(RC_Uri::current_url());
+            $url = with(new Ecjia\App\Wechat\Authorize\WechatAuthorize($uuid))->getAuthorizeUrl(RC_Uri::current_url());
             $this->redirect($url);
         }
 
