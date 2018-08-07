@@ -94,7 +94,12 @@ class mp_zjd_init extends PluginPageController implements PluginPageInterface
         $wechat_id = $platform_account->getAccountID();
         $store_id = $platform_account->getStoreId();
 
-        $MarketActivity = new Ecjia\App\Market\Prize\MarketActivity($code, $store_id, $wechat_id);
+        try {
+            $MarketActivity = new Ecjia\App\Market\Prize\MarketActivity($code, $store_id, $wechat_id);
+        } catch (Ecjia\App\Market\Exceptions\ActivityException $e) {
+            return ecjia_front::$controller->showmessage($e->getMessage(), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
+        }
+
         $name = $MarketActivity->getActivityName();
 
         ecjia_front::$controller->assign('title', sprintf('%s - %s - %s', $name, $platform_account->getAccountName(), ecjia::config('shop_name')));
