@@ -65,8 +65,8 @@ class mp_zjd_init extends PluginPageController implements PluginPageInterface
 
         $this->assginPluginStyleUrl('egg_1_png', 'images/egg_1.png');
         $this->assginPluginStyleUrl('egg_2_png', 'images/egg_2.png');
-        $this->assginPluginStyleUrl('img_4_png', 'images/img-4.png');
-        $this->assginPluginStyleUrl('img_6_png', 'images/img-6.png');
+        $this->assginPluginStyleUrl('img_4_png', 'images/img_4.png');
+        $this->assginPluginStyleUrl('img_6_png', 'images/img_6.png');
         $this->assginPluginStyleUrl('my_prize_png', 'images/my_prize.png');
         
 
