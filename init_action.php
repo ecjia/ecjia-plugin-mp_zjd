@@ -123,6 +123,9 @@ class mp_zjd_init_action implements PluginPageInterface
     		return ecjia_front::$controller->showmessage('很遗憾，未中奖！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     	
+    	//填写参与记录
+    	$MarketActivity->incrementLotteryCount($openid);
+    	
     	$status = Ecjia\App\Market\Prize\PrizeType::getPrizeStatus($prize_info->prize_type);
     	if (empty($status)) {
             //扣减未中奖的奖品数量
@@ -130,9 +133,6 @@ class mp_zjd_init_action implements PluginPageInterface
     		return ecjia_front::$controller->showmessage('很遗憾，再接再励！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     
-    	//填写参与记录
-    	$MarketActivity->incrementLotteryCount($openid);
-    	
     	//记录中奖记录
     	$logid = $MarketActivity->addLotteryPrizeLog($openid, $prize_info);
     
