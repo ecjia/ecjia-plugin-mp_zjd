@@ -105,6 +105,13 @@
     <script type="text/javascript" src="{$jquery_js}"></script>
     <script>
         $(function () {
+       	  var ISWeixin = !!navigator.userAgent.match(/MicroMessenger/i); //wp手机无法判断
+	      if(!ISWeixin){
+	          var rd_url = location.href.split('#')[0];  // remove hash
+	          var oauth_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri='+encodeURIComponent(rd_url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+	          location.href = oauth_url;
+	          return false;
+	      }
             var timer, forceStop;
             var wxch_Marquee = function (id) {
                 try {
@@ -158,7 +165,7 @@
                 }, 1000, function () {
                     $(this).addClass('hit');
                     $("#f").css('left', offset.left).show();
-                    $egg.find('img').attr('src', '{$egg2}');
+                    $egg.find('img').attr('src', '{$egg_2_pmg}');
                     setTimeout(function () {
                         wxch_result.call(window);
                     }, 500);
@@ -168,7 +175,7 @@
             $("#mask").on('click', function () {
                 $(this).hide();
                 $("#dialog").hide();
-                $egg.find('img').attr('src', '{$egg1}');
+                $egg.find('img').attr('src', '{$egg_1_png}');
                 $("#f").hide();
                 $("#hammer").css('left', '-74px').removeClass('hit');
                 wxch_start();
@@ -183,24 +190,35 @@
                 var url = '{$form_action}';
                 $.get(url, function (data) {
                     $("#mask").show();
-                    if (data.state == 'error') {
+//                     if (data.state == 'error') {
+//                         $("#content").html(data.message);
+//                         $("#dialog").attr("class", 'no').show();
+//                         return false;
+//                     }
+					if (data.state == 'success') {
+						var success = '撒花，恭喜您获得' + '"' + data.prize_name + '"';
+                        $("#content").html(success);
+                        //$(".num").html(data.num);
+                        $("#link").attr("href", data.link);
+                        $("#dialog").attr("class", 'yes').show();
+					} else if (data.state == 'error') {
                         $("#content").html(data.message);
                         $("#dialog").attr("class", 'no').show();
                         return false;
                     }
-
-                    if (data.status == 1) {
-                        var success = '撒花，恭喜您获得' + '"' + data.msg + '"';
-                        $("#content").html(success);
-                        $(".num").html(data.num);
-                        $("#link").attr("href", data.link);
-                        $("#dialog").attr("class", 'yes').show();
-                    } else if (data.status == 0) {
-                        var success = '撒花，恭喜您获得' + '"' + data.msg + '"';
-                        $("#content").html(success);
-                        $(".num").html(data.num);
-                        $("#dialog").attr("class", 'no').show();
-                    }
+					
+//                     if (data.status == 1) {
+//                         var success = '撒花，恭喜您获得' + '"' + data.prize_name + '"';
+//                         $("#content").html(success);
+//                         $(".num").html(data.num);
+//                         $("#link").attr("href", data.link);
+//                         $("#dialog").attr("class", 'yes').show();
+//                     } else if (data.status == 0) {
+//                         var success = '撒花，恭喜您获得' + '"' + data.msg + '"';
+//                         $("#content").html(success);
+//                         $(".num").html(data.num);
+//                         $("#dialog").attr("class", 'no').show();
+//                     }
                 });
             }
         });
