@@ -69,6 +69,12 @@ class mp_zjd_init extends PluginPageController implements PluginPageInterface
         $this->assginPluginStyleUrl('img_6_png', 'images/img_6.png');
         $this->assginPluginStyleUrl('my_prize_png', 'images/my_prize.png');
 
+        if (! ecjia_is_weixin()) {
+            $uuid = trim($_GET['uuid']);
+            $url = with(new WechatAuthorize($uuid))->getAuthorizeUrl(RC_Uri::current_url());
+            $this->redirect($url);
+        }
+
     }
 
     public function action()
