@@ -122,20 +122,20 @@ class mp_zjd_init_action implements PluginPageInterface
     	if (empty($prize_info)) {
     		return ecjia_front::$controller->showmessage('很遗憾，未中奖！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
-    
-    	//填写参与记录
-    	$MarketActivity->incrementLotteryCount($openid);
-    
+    	
     	$status = Ecjia\App\Market\Prize\PrizeType::getPrizeStatus($prize_info->prize_type);
     	if (empty($status)) {
     		return ecjia_front::$controller->showmessage('很遗憾，再接再励！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     
+    	//填写参与记录
+    	$MarketActivity->incrementLotteryCount($openid);
+    	
     	//记录中奖记录
     	$logid = $MarketActivity->addLotteryPrizeLog($openid, $prize_info);
     
     	//发奖环节
-    	$aa = $MarketActivity->issuePrize($wechat_id, $openid, $prize_info, $logid);
+    	$MarketActivity->issuePrize($wechat_id, $openid, $prize_info, $logid);
  
     	//中奖名称
     	$rs['prize_name'] = $prize_info->prize_name;
