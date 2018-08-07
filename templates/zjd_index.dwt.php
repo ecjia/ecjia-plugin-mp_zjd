@@ -165,7 +165,7 @@
                 }, 1000, function () {
                     $(this).addClass('hit');
                     $("#f").css('left', offset.left).show();
-                    $egg.find('img').attr('src', '{$egg_2_pmg}');
+                    $egg.find('img').attr('src', '{$egg_2_png}');
                     setTimeout(function () {
                         wxch_result.call(window);
                     }, 500);
