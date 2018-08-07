@@ -125,6 +125,8 @@ class mp_zjd_init_action implements PluginPageInterface
     	
     	$status = Ecjia\App\Market\Prize\PrizeType::getPrizeStatus($prize_info->prize_type);
     	if (empty($status)) {
+            //扣减未中奖的奖品数量
+            $MarketActivity->subtractLotteryPrizeNum($prize_info);
     		return ecjia_front::$controller->showmessage('很遗憾，再接再励！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     
