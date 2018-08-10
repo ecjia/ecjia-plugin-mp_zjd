@@ -96,11 +96,11 @@ class mp_zjd_init_action implements PluginPageInterface
     
     	// 判断砸金蛋时间时间是否开始
     	if ($time < $starttime) {
-    		return ecjia_front::$controller->showmessage('刮刮卡活动还未开始', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    		return ecjia_front::$controller->showmessage('砸金蛋活动还未开始', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     	//判断砸金蛋时间时间是否结束
     	if ($time > $endtime) {
-    		return ecjia_front::$controller->showmessage('刮刮卡活动已经结束', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+    		return ecjia_front::$controller->showmessage('砸金蛋活动已经结束', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     
     	//获取用户剩余抽奖次数
