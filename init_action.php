@@ -115,7 +115,10 @@ class mp_zjd_init_action implements PluginPageInterface
     	* 通过概率计算函数get_rand获取抽中的奖项id。
     	* 最后输出json个数数据给前端页面。
     	*/
-    	$prize_info = $MarketActivity->randLotteryPrizeAction();
+        //填写参与记录
+        $MarketActivity->incrementLotteryCount($openid);
+
+        $prize_info = $MarketActivity->randLotteryPrizeAction();
     	
     	$prize_id = $prize_info['prize_id'];
     	
@@ -128,9 +131,7 @@ class mp_zjd_init_action implements PluginPageInterface
     		return ecjia_front::$controller->showmessage('很遗憾，未中奖！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
     	}
     	
-    	//填写参与记录
-    	$MarketActivity->incrementLotteryCount($openid);
-    	
+
     	$status = Ecjia\App\Market\Prize\PrizeType::getPrizeStatus($prize_info->prize_type);
     	if (empty($status)) {
             //扣减未中奖的奖品数量
