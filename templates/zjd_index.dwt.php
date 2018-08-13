@@ -172,6 +172,7 @@
                 $("#f").hide();
                 $("#hammer").css('left', '-74px').removeClass('hit');
                 wxch_start();
+                window.location.reload();
             });
 
             $("#close").click(function () {
@@ -183,15 +184,10 @@
                 var url = '{$form_action}';
                 $.get(url, function (data) {
                     $("#mask").show();
-//                     if (data.state == 'error') {
-//                         $("#content").html(data.message);
-//                         $("#dialog").attr("class", 'no').show();
-//                         return false;
-//                     }
+
 					if (data.state == 'success') {
 						var success = '撒花，恭喜您获得' + '"' + data.prize_name + '"';
                         $("#content").html(success);
-                        //$(".num").html(data.num);
                         $("#link").attr("href", data.link);
                         $("#dialog").attr("class", 'yes').show();
 					} else if (data.state == 'error') {
@@ -199,19 +195,6 @@
                         $("#dialog").attr("class", 'no').show();
                         return false;
                     }
-					
-//                     if (data.status == 1) {
-//                         var success = '撒花，恭喜您获得' + '"' + data.prize_name + '"';
-//                         $("#content").html(success);
-//                         $(".num").html(data.num);
-//                         $("#link").attr("href", data.link);
-//                         $("#dialog").attr("class", 'yes').show();
-//                     } else if (data.status == 0) {
-//                         var success = '撒花，恭喜您获得' + '"' + data.msg + '"';
-//                         $("#content").html(success);
-//                         $(".num").html(data.num);
-//                         $("#dialog").attr("class", 'no').show();
-//                     }
                 });
             }
         });
