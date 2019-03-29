@@ -105,6 +105,7 @@
     <script type="text/javascript" src="{$jquery_js}"></script>
     <script>
         $(function () {
+            var js_lang_award = '{$js_lang_award}';
             var timer, forceStop;
             var wxch_Marquee = function (id) {
                 try {
@@ -186,7 +187,7 @@
                     $("#mask").show();
 
 					if (data.state == 'success') {
-						var success = '撒花，恭喜您获得' + '"' + data.prize_name + '"';
+						var success = js_lang_award + '"' + data.prize_name + '"';
                         $("#content").html(success);
                         $("#link").attr("href", data.link);
                         $("#dialog").attr("class", 'yes').show();
