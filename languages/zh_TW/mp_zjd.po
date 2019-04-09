@@ -4,20 +4,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 砸金蛋 1.20.0\n"
 "Report-Msgid-Bugs-To: https://www.ecjia.com/support/plugin/\n"
-"POT-Creation-Date: 2019-03-22 03:53:36+00:00\n"
+"POT-Creation-Date: 2019-04-04 05:41:04+00:00\n"
+"PO-Revision-Date: 2019-04-09 11:06+0800\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-03-25 16:36+0800\n"
-"Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
 "X-Generator: Poedit 2.2\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_TW\n"
 
 #: init.php:116
 msgid "无限次"
 msgstr "無限次"
+
+#: init.php:129
+msgid "撒花，恭喜您获得"
+msgstr "撒花，恭喜您獲得"
 
 #: init_action.php:61
 msgid "请先登录"
